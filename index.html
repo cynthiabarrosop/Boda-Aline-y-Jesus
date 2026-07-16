@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestra Boda - Aline & Jesús</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <style>
+    :root {
+        --dorado: #993d3d;
+        --crema: #f9f4ea;
+        --oscuro: #2c2c2c;
+        --vino: #8b1e1e;
+    }
+
+    body, html { margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; background-color: var(--crema); color: var(--oscuro); scroll-behavior: smooth; overflow-x: hidden; }
+    .cormorant { font-family: 'Cormorant Garamond', serif; }
+    .reveal { opacity: 0; transform: translateY(30px); transition: all 1s ease-out; }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+    #envelope-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #efebe1; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 4000; transition: transform 1.2s cubic-bezier(0.8, 0, 0.2, 1); }
+    #portable-cover { width: 100%; min-height: 100vh; position: relative; }
+    .cover-img { width: 100%; height: 100vh; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1;}
+    .cover-timer-overlay { position: absolute; bottom: 40px; width: 100%; z-index: 3; }
+    .container { width: 100%; max-width: 1000px; padding: 80px 20px; margin: 0 auto; box-sizing: border-box; text-align: center; }
+    .cover-text-top { position: absolute; top: 5%; width: 100%; text-align: center; color: white; z-index: 3; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+    .cover-text-top img { max-width: 100px !important; margin-top: 0px; height: auto; }
+    .cover-text-top h1 { font-size: 35px; margin: 0; font-weight: 300; }
+    .cover-text-top p { font-size: 12px; letter-spacing: 6px; margin-top: 5px; }
+    .timer-container { display: grid; grid-template-columns: repeat(4, 1fr); width: 90%; margin: 0 auto; gap: 10px; }
+    .timer-box-simple { text-align: center; }
+    .timer-box-simple span { display: block; font-size: 40px; font-weight: bold; color: white; }
+    .timer-box-simple label { font-size: 12px; text-transform: uppercase; color: white; letter-spacing: 1px;}
+    .btn-gold { background: var(--dorado); color: white; padding: 18px; border: none; border-radius: 8px; cursor: pointer; text-transform: uppercase; font-weight: bold; letter-spacing: 2px; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
+    .seccion-invitacion { min-height: 90vh; display: flex; justify-content: center; align-items: center; }
+    .imagen-contenido { width: 100%; max-width: 500px; height: auto; }
+    #foto { width: 100%; height: 100vh; background-size: cover; background-position: center; }
+    #rsvpForm { max-width: 450px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
+    #rsvpForm input, #rsvpForm select, #rsvpForm textarea { width: 100%; padding: 20px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; }
+    .mySwiper { width: 100%; max-width: 800px; height: 500px; padding: 50px 0; overflow: visible !important; margin: 0 auto; }
+    .swiper-slide { background: white; padding: 10px 10px 40px 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: center; align-items: center; width: 90%; aspect-ratio: 5/3; }
+    .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
+    .swiper-slide-shadow { background: rgba(0,0,0,0.1) !important; }
+    .swiper-button-next, .swiper-button-prev { color: var(--dorado); display: none; }
+    .maps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; }
+    .map-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+    iframe { width: 100%; height: 250px; border: 0; border-radius: 10px; margin: 15px 0; }
+    #rsvpForm { max-width: 450px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
+    #rsvpForm input, #rsvpForm select, #rsvpForm textarea { width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+    .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); }
+    .modal-content { background: #fdfaf6; margin: 10% auto; padding: 30px; border-radius: 15px; width: 85%; max-width: 400px; text-align: center; position: relative; }
+    .btn-copy { background-color: var(--dorado); color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; width: 100%; }
+    #audio-container { position: fixed; top: 20px; right: 20px; z-index: 5000; }
+    #btn-musica { background: var(--dorado); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; }
+    .galeria-fotos { display: flex; flex-direction: column; align-items: center; width: 100%; padding: 40px 20px;  box-sizing: border-box; }
+    .galeria-fotos img { width: 90%; max-width: 600px; height: auto; margin: 15px 0; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    .gift-buttons-container { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; max-width: 600px; margin: 20px auto; }
+    .gift-buttons-container .btn-gold { width: auto; min-width: 250px; flex: 1; }
+     #programa { position: relative; }
+    .timeline-container { position: relative; max-width: 800px; margin: 0 auto; padding: 40px 0; }
+    .timeline-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: #e0e0e0; transform: translateX(-50%); z-index: 1; }
+    .timeline-item { width: 50%; margin-bottom: 40px; position: relative; z-index: 2;   }
+    .timeline-item.left { left: 0; text-align: right; padding-right: 45px; box-sizing: border-box; }
+    .timeline-item.right { left: 50%; text-align: left; padding-left: 45px; box-sizing: border-box; }
+    .timeline-icon { position: absolute; top: 0; width: 40px; height: 40px; background: var(--dorado);  color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; }
+    .left .timeline-icon { right: -20px; }        
+    .right .timeline-icon { left: -20px; }
+    .grid-fotos-verticales img { width: 85%; object-fit: contain; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    .seccion-imagen-final {
+        width: 100%;
+        height: 100vh; 
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cover-text-bottom {
+        position: absolute;
+        bottom: 50px; 
+        width: 100%;
+        text-align: center;
+        z-index: 3;
+        color: white;
+    }
+
+    .cover-overlay-radial {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: radial-gradient(
+            ellipse at center,  /* El centro es transparente */
+            rgba(0,0,0,0) 0%,     /* Transparente en el centro (0%) */
+            rgba(0,0,0,0.2) 50%,  /* Se suaviza un poco al 50% */
+            rgba(0,0,0,0.8) 90%,  /* Se vuelve fuerte hacia los bordes (90%) */
+            rgba(0,0,0,0.9) 100%  /* Negro casi total en el borde superior e inferior (100%) */
+        );
+        pointer-events: none; /* Permite hacer clic a través de él si hubiera enlaces */
+    }
+    @media (min-width: 1024px) {
+        .swiper-button-next, .swiper-button-prev { display: flex; }
+    }
+    @media (max-width: 768px) {
+        .maps-grid { grid-template-columns: 1fr; }
+        .timer-box-simple span { font-size: 35px; }
+        .timer-box-simple label { font-size: 15px; }
+        .gift-buttons-container { flex-direction: column; width: 90%; }
+        .timeline-container { max-width: 800px; }
+        .timeline-item { width: 50%; }
+        .timeline-item.left { margin-right: auto; text-align: right; flex-direction: row-reverse; }
+        .timeline-item.right { text-align: left; }
+        .timeline-item.left .timeline-icon { margin-right: 0; margin-left: 20px; }
+        .cover-text-top { top: 3%; }
+        .timer-container { gap: 15px; }
+        .mySwiper { width: 100%; max-width: 800px; height: auto; padding: 20px 0; }
+        .swiper-slide { height: 60%; aspect-ratio: 5/3; }
+        .swiper-slide img { width: 100%;  object-fit: cover; }
+    }
+</style>
+
+    </style>
+</head>
+<body>
+    <div id="audio-container">
+        <audio id="musica" loop>
+            <source src="musica.mp3" type="audio/mpeg">
+        </audio>
+        <button id="btn-musica" onclick="toggleMusica()">
+            <i id="icono-musica" class="fas fa-music"></i>
+        </button>
+    </div>
+    <div id="envelope-overlay">
+            <h2 class="cormorant">¡Bienvenidos!</h2>
+            <div onclick="abrirSobre()" style="cursor:pointer; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                <svg width="100" height="100" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" fill="#8b1e1e" />
+                    <text x="50" y="62" text-anchor="middle" fill="white" font-family="serif" font-size="22">A&J</text>
+                </svg>
+            </div>
+            <p class="montserrat" style="font-size: 10px; margin-top: 20px; letter-spacing: 3px;">TOCA EL SELLO</p>
+    </div>
+
+   <section id="portable-cover">
+        <img src="img/main.jpg" class="cover-img">
+        <div class="cover-overlay-radial" style="z-index: 2;"></div>
+            <div class="cover-text-top">
+                <h1 class="cormorant">Nos casamos</h1>
+                <p class="montserrat">31 OCTUBRE 2026</p>
+                <img src="img/logo2.png" alt="Logo" style="max-width: 200px; margin-top: 20px;">
+            </div>
+            <div class="cover-timer-overlay">
+                <div class="timer-container">
+                    <div class="timer-box-simple"><span id="months">0</span><label>Meses</label></div>
+                    <div class="timer-box-simple"><span id="days">0</span><label>Días</label></div>
+                    <div class="timer-box-simple"><span id="hours">0</span><label>Horas</label></div>
+                    <div class="timer-box-simple"><span id="minutes">0</span><label>Min</label></div>
+                </div>
+            </div>
+        </section>
+
+    <section class="seccion-invitacion">
+        <div class="contenedor-contenido">
+            <img src="img/frase.png" alt="Invitación" class="imagen-contenido">
+         </div>
+    </section>
+
+    <section id="ubicacion" class="container reveal">
+        <h2 class="cormorant" style="font-size: 36px;">Ubicación</h2>
+        <div class="maps-grid">
+            <div class="map-card">
+                <h3 class="montserrat">La Ceremonia</h3>
+                <p class="cormorant" style="font-size: 22px;">Templo Expiatorio del Sagrado Corazón de Jesús</p>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3721.805383488766!2d-101.6773157247978!3d21.12032378055201!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842bbf0868670c21%3A0xe64c3a52a63f9ab5!2sTemplo%20Expiatorio%20del%20Sagrado%20Coraz%C3%B3n%20de%20Jes%C3%BAs!5e0!3m2!1ses!2smx!4v1784163677401!5m2!1ses!2smx"></iframe>
+            </div>
+            <div class="map-card">
+                <h3 class="montserrat">La Fiesta</h3>
+                <p class="cormorant" style="font-size: 22px;">Quinta Sao Paulo</p>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3720.9232913602423!2d-101.6722106!3d21.155450799999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842bbf2e2ca215fb%3A0xdbc4bc601421c1dc!2sQuinta%20Sao%20Paulo!5e0!3m2!1ses!2smx!4v1784163572533!5m2!1ses!2smx"></iframe>
+            </div>
+        </div>
+        </section>
+
+        <section id="galeria" class="container reveal">
+            <h2 class="cormorant" style="font-size: 36px;">Nuestra Historia</h2>
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="img/2.jpg"></div>
+                    <div class="swiper-slide"><img src="img/3.jpg"></div>
+                    <div class="swiper-slide"><img src="img/4.jpg"></div>
+                    <div class="swiper-slide"><img src="img/5.jpg"></div>
+                    <div class="swiper-slide"><img src="img/6.jpg"></div>
+                    <div class="swiper-slide"><img src="img/7.jpg"></div>
+                    <div class="swiper-slide"><img src="img/8.jpg"></div>
+                    <div class="swiper-slide"><img src="img/9.jpg"></div>
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </section>
+
+        <section id="programa" class="container reveal">
+            <h2 class="cormorant" style="font-size: 36px;">Itinerario</h2>
+            <div class="timeline-container">
+                <div class="timeline-line"></div>
+                
+                <div class="timeline-item left reveal">
+                    <div class="timeline-icon"><i class="fas fa-church"></i></div>
+                    <h3 class="cormorant">Ceremonia</h3>
+                    <p class="montserrat" style="font-size: 13px; color: var(--dorado);">2:00 PM</p>
+                </div>
+                <div class="timeline-item right reveal">
+                    <div class="timeline-icon"><i class="fas fa-location-dot"></i></div>
+                    <h3 class="cormorant">Recepción</h3>
+                    <p class="montserrat" style="font-size: 13px; color: var(--dorado);">4:00 PM</p>
+                </div>
+                <div class="timeline-item left reveal">
+                    <div class="timeline-icon"><i class="fas fa-utensils"></i></div>
+                    <h3 class="cormorant">Comida</h3>
+                    <p class="montserrat" style="font-size: 13px; color: var(--dorado);">5:00 PM</p>
+                </div>
+                <div class="timeline-item right reveal">
+                    <div class="timeline-icon"><i class="fas fa-champagne-glasses"></i></div>
+                    <h3 class="cormorant">Brindis</h3>
+                    <p class="montserrat" style="font-size: 13px; color: var(--dorado);">6:00 PM</p>
+                </div>
+                <div class="timeline-item left reveal">
+                    <div class="timeline-icon"><i class="fas fa-compact-disc"></i></div>
+                    <h3 class="cormorant">Baile</h3>
+                    <p class="montserrat" style="font-size: 13px; color: var(--dorado);">8:00 PM</p>
+                </div>
+                <div class="timeline-item right reveal">
+                    <div class="timeline-icon"><i class="fas fa-cocktail"></i></div>
+                    <h3 class="cormorant">Tornaboda</h3>
+                    <p class="montserrat" style="font-size: 13px; color: var(--dorado);">11:00 PM</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="mesa-regalos" class="container reveal">
+            <h2 class="cormorant" style="font-size: 36px;">Mesa de Regalos</h2>
+            <p style="margin-bottom: 30px;">Tu presencia es nuestro mejor regalo, pero si deseas hacernos algún obsequio, tenemos algunas opciones:</p>
+            <div class="gift-buttons-container">
+                <a href="https://www.amazon.com.mx/wedding/guest-view/3SSIYQQGFPPUY" target="_blank" class="btn-gold" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                    <i class="fab fa-amazon"></i> AMAZON
+                </a>
+                <button onclick="openModal()" class="btn-gold" style="cursor: pointer; display: inline-flex; align-items: center; gap: 8px; border: none; font-family: inherit; font-size: inherit;">
+                    <i class="fas fa-money-bill-wave"></i> REGALO EN EFECTIVO
+                </button>
+            </div>
+            <div id="bankModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-modal" onclick="closeModal()">&times;</span>
+                    <h3 class="cormorant" style="font-size: 28px; color: #b8926a; margin-top: 15px;">Datos Bancarios</h3>
+                    <div class="bank-details montserrat" style="font-size: 14px; text-align: left; margin-top: 20px;">
+                        <p><strong>Banco:</strong> BBVA</p>
+                        <p><strong>Titular:</strong> Aline Mariana Guzmán Martínez </p>
+                        <p><strong>CLABE:</strong> <span id="clabe-number">4152314557800821</span></p>
+                        <button class="btn-copy" onclick="copyClabe()">
+                            <i class="far fa-copy"></i> Copiar CLABE
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        </section>
+
+        <section id="vestimenta" class="container reveal">
+                 <h2 class="cormorant" style="font-size: 36px;">Dresscode</h2>
+                 <section class="seccion-invitacion">
+                    <div class="contenedor-contenido">
+                        <img src="img/dc.png" alt="Invitación" class="imagen-contenido">
+                        </div>
+                </section>
+        </section>
+
+        <section class="container reveal">
+            <div class="grid-fotos-verticales">
+                <img src="img/1.jpg" alt="Foto Vertical 1">
+            </div>
+        </section>
+
+        <section id="rsvp" class="container reveal">
+            <h2 class="cormorant" style="font-size: 36px;">Confirmar Asistencia</h2>
+            
+            <p id="pases-mensaje" style="font-weight: bold; color: var(--vino); font-size: 18px; margin-bottom: 10px;">
+                Cargando información de tu invitación...
+            </p>
+
+            <p style="margin-bottom: 30px;"> Nos encantará vivir este momento contigo. Agradecemos tu sinceridad confirmando la asistencia. <strong>26 de septiembre.</strong></p>
+
+            <form id="rsvpForm">
+                <input type="hidden" name="pases_asignados" id="input-pases" value="1">
+                
+                <input type="text" name="nombre" placeholder="Nombre completo" required>
+                
+                <select name="asistencia" id="select-asistencia" required>
+                    <option value="" disabled selected>¿Asistirás?</option>
+                    <option value="Si">Sí, ¡con mucho gusto!</option>
+                    <option value="No">Lo siento, no puedo</option>
+                </select>
+                <select name="cantidad_confirmada" id="select-cantidad-asistentes" style="display:none; margin-top: 10px; width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 8px;">
+                    <option value="" disabled selected>¿Cuántos asistirán?</option>
+                </select>
+
+                <textarea name="mensaje" placeholder="¿Alguna alergia o mensaje para nosotros?"></textarea>
+                <button type="submit" id="btnEnviar" class="btn-gold">Confirmar ahora</button>
+            </form>
+            <p id="success-msg" style="display:none; color: #4a7c44; font-weight: bold; margin-top: 20px;">
+                <i class="fas fa-check-circle"></i> ¡Confirmación enviada con éxito!
+            </p>
+        </section>
+
+       <section id="ultima" class="seccion-imagen-final">
+            <img src="img/10.jpg" class="cover-img" style="position: absolute; z-index: 1;">
+                        <div class="cover-overlay-radial" style="z-index: 2;"></div>
+            <div class="cover-text-bottom">
+                <h2 class="cormorant" style="color: white; font-size: 28px; margin: 0;">¡Nos vemos pronto!</h2>
+                <img src="img/logo2.png" alt="Logo" style="max-width: 120px; margin-top: 15px;">
+            </div>
+        </section>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+
+        function abrirSobre() {
+            document.getElementById('envelope-overlay').style.transform = "translateY(-100%)";
+            setTimeout(reveal, 500);
+            const audio = document.getElementById('musica');
+            audio.play();
+            document.getElementById('icono-musica').className = "fas fa-pause";
+        }
+
+        function toggleMusica() {
+            const audio = document.getElementById('musica');
+            const icono = document.getElementById('icono-musica');
+            if (audio.paused) {
+                audio.play();
+                icono.className = "fas fa-pause";
+            } else {
+                audio.pause();
+                icono.className = "fas fa-music";
+            }
+        }
+        function openModal() {
+            document.getElementById("bankModal").style.display = "block";
+        }
+        
+        function closeModal() {
+            document.getElementById("bankModal").style.display = "none";
+        }
+        
+        function copyClabe() {
+            const clabe = document.getElementById("clabe-number").innerText;
+            navigator.clipboard.writeText(clabe).then(() => {
+                const btn = document.querySelector(".btn-copy");
+                btn.innerHTML = '<i class="fas fa-check"></i> ¡Copiado!';
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="far fa-copy"></i> Copiar CLABE';
+                }, 2000);
+            });
+        }
+
+        const swiper = new Swiper(".mySwiper", {
+            effect: "coverflow",
+            grabCursor: true,
+            centeredSlides: true,
+            slidesPerView: "auto",
+            loop: true,
+            coverflowEffect: {
+                rotate: 0,
+                stretch: 0,
+                depth: 100,
+                modifier: 2,
+                slideShadows: true,
+            },
+            navigation: { 
+                nextEl: ".swiper-button-next", 
+                prevEl: ".swiper-button-prev" 
+            },
+        });
+        const targetDate = new Date("October 31, 2026 14:00:00").getTime();
+        function updateTimer() {
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+            if (diff <= 0) return;
+
+            const msPorMinuto = 1000 * 60;
+            const msPorHora = msPorMinuto * 60;
+            const msPorDia = msPorHora * 24;
+            const msPorMes = msPorDia * 30.44; 
+
+            document.getElementById('months').innerText = Math.floor(diff / msPorMes);
+            document.getElementById('days').innerText = Math.floor((diff % msPorMes) / msPorDia);
+            document.getElementById('hours').innerText = Math.floor((diff % msPorDia) / msPorHora);
+            document.getElementById('minutes').innerText = Math.floor((diff % msPorHora) / msPorMinuto);
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        function reveal() {
+            const reveals = document.querySelectorAll(".reveal");
+            reveals.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 50) el.classList.add("active");
+            });
+        }
+        window.addEventListener("scroll", reveal);
+
+        function configurarInvitacion() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const numPases = parseInt(urlParams.get('p')) || 1;
+            
+            const txtMensaje = document.getElementById('pases-mensaje'); 
+            const inputPases = document.getElementById('input-pases');  
+            const selectCantidad = document.getElementById('select-cantidad-asistentes');
+            const selectAsistencia = document.getElementById('select-asistencia'); 
+            
+            inputPases.value = numPases;
+
+            if (numPases > 1) {
+                txtMensaje.innerText = `¡Hola! Hemos reservado ${numPases} lugares para tu familia.`;
+            } else {
+                txtMensaje.innerText = `¡Hola! Hemos reservado 1 lugar especial para ti.`;
+            }
+
+            selectAsistencia.addEventListener('change', function() {
+                if (this.value === 'Si') {
+                    selectCantidad.style.display = "block";
+                    selectCantidad.required = true;
+                    
+                    selectCantidad.innerHTML = `<option value="" disabled selected>¿Cuántos asistirán?</option>`;
+                    for (let i = 1; i <= numPases; i++) {
+                        let option = document.createElement("option");
+                        option.value = i;
+                        option.text = i + (i === 1 ? " persona" : " personas");
+                        selectCantidad.appendChild(option);
+                    }
+                } else {
+                    selectCantidad.style.display = "none";
+                    selectCantidad.required = false;
+                }
+            });
+        }
+
+    window.addEventListener('DOMContentLoaded', configurarInvitacion);
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyO_js5jmtsCnUyZNvRJzs8NbGJ6NEAib1VStzUwKyQksiY4CNSbGyxV6sIaPByMXipAw/exec';
+    const form = document.getElementById('rsvpForm');
+
+    form.addEventListener('submit', e => {
+    e.preventDefault();
+    
+    const btn = document.getElementById('btnEnviar');
+    
+    btn.innerText = "Registrando...";
+    btn.disabled = true;
+    btn.style.opacity = "0.7";
+    btn.style.cursor = "not-allowed";
+    
+        fetch(scriptURL, { method: 'POST', body: new FormData(form), mode: 'no-cors' })
+            .then(() => {
+                document.getElementById('success-msg').style.display = 'block';
+                form.reset();
+                
+                document.getElementById('select-cantidad-asistentes').style.display = "none";
+                
+                btn.innerText = "Confirmar ahora";
+                btn.disabled = false;
+                btn.style.opacity = "1";
+                btn.style.cursor = "pointer";
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Hubo un error al enviar. Por favor intenta de nuevo.");
+                btn.disabled = false;
+                btn.innerText = "Confirmar ahora";
+                btn.style.opacity = "1";
+            });
+    });
+    </script>
+</body>
+</html>
